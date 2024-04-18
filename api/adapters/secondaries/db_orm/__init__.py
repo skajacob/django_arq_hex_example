@@ -1,0 +1,1 @@
+from .repository_implementation_products import Product as ProductORM
