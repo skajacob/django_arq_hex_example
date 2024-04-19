@@ -51,12 +51,10 @@ class ProductsViewSet(viewsets.GenericViewSet):
             products_serializer.ProductQueryParamsSerializer(data=request.query_params)
         )
         product_query_params_serializer.is_valid(raise_exception=True)
-
-        id_product = product_query_params_serializer.validated_data.get("id")
         from_date = product_query_params_serializer.validated_data.get("from_date")
         to_date = product_query_params_serializer.validated_data.get("to_date")
 
-        if from_date is not None and to_date is not None or id_product is not None:
+        if from_date is not None and to_date is not None:
             try:
                 product_data = products_engine.get_product(
                     from_date=from_date, to_date=to_date
@@ -88,19 +86,18 @@ class ProductsViewSet(viewsets.GenericViewSet):
         products_data = [product.__dict__ for product in products]
         alarms_data = [alarm.__dict__ for alarm in alarms]
 
-        # Combinar productos y alarmas en una lista de diccionarios
-        merged_data = []
-        for product_data in products_data:
-            product_id = product_data["id"]
-            product_alarms = [
-                alarm_data
-                for alarm_data in alarms_data
-                if alarm_data["product_id"] == product_id
-            ]
-            product_data["alarms"] = product_alarms
-            merged_data.append(product_data)
+        merged_data = [
+            {
+                **product_data,
+                "alarms": [
+                    alarm_data
+                    for alarm_data in alarms_data
+                    if alarm_data["product_id"] == product_data["id"]
+                ],
+            }
+            for product_data in products_data
+        ]
 
-        print(merged_data)
         product_serializer = products_serializer.ProductSerializer(
             data=merged_data, many=True
         )
@@ -221,5 +218,8 @@ class ProductsViewSet(viewsets.GenericViewSet):
                 data=exceptions.ProductDoesNotExist(product_id).message,
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        response_data = {"detail": "Se elimino producto satisfactoriamente", "data": ""}
+        response_data = {
+            "detail": f"Se elimino producto satisfactoriamente{product}",
+            "data": "",
+        }
         return Response(response_data, status=status.HTTP_204_NO_CONTENT)

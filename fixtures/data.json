@@ -199,6 +199,30 @@
         }
     },
     {
+        "model": "webApp.product",
+        "pk": 2,
+        "fields": {
+            "created_at": "2024-04-19T21:53:41.081Z",
+            "updated_at": "2024-04-19T21:53:41.081Z",
+            "product_name": "Donas Rellenas de Nutella",
+            "description": "Donas Rellenas de Nutella Krispy Kreme",
+            "stock": 50,
+            "expiry_date":"2024-05-03T21:53:41.081Z"
+        }
+    },
+    {
+        "model": "webApp.product",
+        "pk": 3,
+        "fields": {
+            "created_at": "2024-04-19T21:53:41.081Z",
+            "updated_at": "2024-04-19T21:53:41.081Z",
+            "product_name": "Donas Rellenas de Mermelada",
+            "description": "Donas Rellenas de Mermelada Krispy Kreme",
+            "stock": 25,
+            "expiry_date":"2024-07-27T21:53:41.081Z"
+        }
+    },
+    {
         "model": "webApp.alarm",
         "pk": 1,
         "fields": {
@@ -219,6 +243,54 @@
             "product": 1,
             "alert_type": "10_days_before",
             "alert_date": "2024-04-23",
+            "is_active": true
+        }
+    },
+    {
+        "model": "webApp.alarm",
+        "pk": 3,
+        "fields": {
+            "created_at": "2024-03-10T21:54:36.424Z",
+            "updated_at": "2024-03-10T21:54:36.424Z",
+            "product": 2,
+            "alert_type": "5_days_before",
+            "alert_date": "2024-04-28",
+            "is_active": true
+        }
+    },
+    {
+        "model": "webApp.alarm",
+        "pk": 4,
+        "fields": {
+            "created_at": "2024-03-10T21:54:36.424Z",
+            "updated_at": "2024-03-10T21:54:36.424Z",
+            "product": 2,
+            "alert_type": "10_days_before",
+            "alert_date": "2024-04-23",
+            "is_active": true
+        }
+    },
+    {
+        "model": "webApp.alarm",
+        "pk": 5,
+        "fields": {
+            "created_at": "2024-03-10T21:54:36.424Z",
+            "updated_at": "2024-03-10T21:54:36.424Z",
+            "product": 3,
+            "alert_type": "5_days_before",
+            "alert_date": "2024-07-22",
+            "is_active": true
+        }
+    },
+    {
+        "model": "webApp.alarm",
+        "pk": 5,
+        "fields": {
+            "created_at": "2024-03-10T21:54:36.424Z",
+            "updated_at": "2024-03-10T21:54:36.424Z",
+            "product": 3,
+            "alert_type": "10_days_before",
+            "alert_date": "2024-07-17",
             "is_active": true
         }
     },
