@@ -1,0 +1,265 @@
+[
+    {
+        "model": "admin.logentry",
+        "pk": 1,
+        "fields": {
+            "action_time": "2022-11-30T21:52:22.099Z",
+            "user": 1,
+            "content_type": 8,
+            "object_id": "2",
+            "object_repr": "dj-admin@cheaf.io",
+            "action_flag": 2,
+            "change_message": "[{\"changed\": {\"fields\": [\"Is superuser\"]}}]"
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 2,
+        "fields": {
+            "action_time": "2022-11-30T21:52:39.933Z",
+            "user": 1,
+            "content_type": 3,
+            "object_id": "1",
+            "object_repr": "super_administrator",
+            "action_flag": 1,
+            "change_message": "[{\"added\": {}}]"
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 3,
+        "fields": {
+            "action_time": "2022-11-30T21:52:50.738Z",
+            "user": 1,
+            "content_type": 3,
+            "object_id": "2",
+            "object_repr": "administrator",
+            "action_flag": 1,
+            "change_message": "[{\"added\": {}}]"
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 4,
+        "fields": {
+            "action_time": "2022-11-30T21:53:10.765Z",
+            "user": 1,
+            "content_type": 8,
+            "object_id": "1",
+            "object_repr": "dj-superadmin@cheaf.io",
+            "action_flag": 2,
+            "change_message": "[{\"changed\": {\"fields\": [\"Groups\"]}}]"
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 5,
+        "fields": {
+            "action_time": "2022-11-30T21:53:17.240Z",
+            "user": 1,
+            "content_type": 8,
+            "object_id": "2",
+            "object_repr": "dj-admin@cheaf.io",
+            "action_flag": 2,
+            "change_message": "[{\"changed\": {\"fields\": [\"Groups\"]}}]"
+        }
+    },
+    {
+        "model": "auth.group",
+        "pk": 1,
+        "fields": {
+            "name": "super_administrator",
+            "permissions": [
+                1,
+                2,
+                3,
+                4,
+                9,
+                10,
+                11,
+                12,
+                5,
+                6,
+                7,
+                8,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                32
+            ]
+        }
+    },
+    {
+        "model": "auth.group",
+        "pk": 2,
+        "fields": {
+            "name": "administrator",
+            "permissions": [
+                24
+            ]
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 1,
+        "fields": {
+            "app_label": "admin",
+            "model": "logentry"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 2,
+        "fields": {
+            "app_label": "auth",
+            "model": "permission"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 3,
+        "fields": {
+            "app_label": "auth",
+            "model": "group"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 4,
+        "fields": {
+            "app_label": "contenttypes",
+            "model": "contenttype"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 5,
+        "fields": {
+            "app_label": "sessions",
+            "model": "session"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 6,
+        "fields": {
+            "app_label": "webApp",
+            "model": "product"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 7,
+        "fields": {
+            "app_label": "webApp",
+            "model": "alarm"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 8,
+        "fields": {
+            "app_label": "backoffice",
+            "model": "administrator"
+        }
+    },
+    {
+        "model": "sessions.session",
+        "pk": "mx9lwuf9vutwuyg8rsg2yovudh6rjlnq",
+        "fields": {
+            "session_data": ".eJxVjDsOwjAQBe_iGlmx179Q0ucM1nq9wQHkSHFSIe5OIqWA9s3Me4uI21ri1niJUxZXocTld0tIT64HyA-s91nSXNdlSvJQ5EmbHObMr9vp_h0UbGWvdYcOVSJvAb1LBC5DQKA-dKAILPsRrNcGCJOxrLXpA7AP4-451FZ8vtNgNz0:1p0Uzn:Sz-3Bmk23pd0PFK0ZD94vuALOxMhpBoCGpKIEsXRkB0",
+            "expire_date": "2022-12-14T21:51:59.459Z"
+        }
+    },
+    {
+        "model": "webApp.product",
+        "pk": 1,
+        "fields": {
+            "created_at": "2024-04-19T21:53:41.081Z",
+            "updated_at": "2024-04-19T21:53:41.081Z",
+            "product_name": "Donas Glaseadas",
+            "description": "Donas Glaseadas Krispy Kreme",
+            "stock": 100,
+            "expiry_date":"2024-05-03T21:53:41.081Z"
+        }
+    },
+    {
+        "model": "webApp.alarm",
+        "pk": 1,
+        "fields": {
+            "created_at": "2024-03-10T21:54:36.424Z",
+            "updated_at": "2024-03-10T21:54:36.424Z",
+            "product": 1,
+            "alert_type": "5_days_before",
+            "alert_date": "2024-04-28",
+            "is_active": true
+        }
+    },
+    {
+        "model": "webApp.alarm",
+        "pk": 2,
+        "fields": {
+            "created_at": "2024-03-10T21:54:36.424Z",
+            "updated_at": "2024-03-10T21:54:36.424Z",
+            "product": 1,
+            "alert_type": "10_days_before",
+            "alert_date": "2024-04-23",
+            "is_active": true
+        }
+    },
+    {
+        "model": "backoffice.administrator",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$216000$zVfIYILxqlmJ$xEmt5gzoQKySjRw/tpmbuExtzXgrIG0Ac+KX8Pzrrco=",
+            "last_login": "2022-11-30T21:51:59Z",
+            "created_at": "2022-11-30T21:48:50.833Z",
+            "updated_at": "2022-11-30T21:53:10.760Z",
+            "name": "Super admin",
+            "username": "Tests Super Admin",
+            "email": "dj-superadmin@cheaf.io",
+            "is_active": true,
+            "is_staff": true,
+            "is_superuser": true,
+            "groups": [
+                1
+            ],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "backoffice.administrator",
+        "pk": 2,
+        "fields": {
+            "password": "pbkdf2_sha256$216000$wnNmvu7y2QJ8$3iK9HnJP8hKN/aow8eSN12EGHH9gqzjWesr8u/YKSGo=",
+            "last_login": null,
+            "created_at": "2022-11-30T21:49:22.305Z",
+            "updated_at": "2022-11-30T21:53:17.234Z",
+            "name": "test",
+            "username": "testadmin",
+            "email": "dj-admin@cheaf.io",
+            "is_active": true,
+            "is_staff": true,
+            "is_superuser": false,
+            "groups": [
+                2
+            ],
+            "user_permissions": []
+        }
+    }
+]

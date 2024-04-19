@@ -28,7 +28,6 @@ class ProductManager(abc.ABC):
         description: str,
         stock: int,
         expiry_date: str,
-        alarms: list,
     ) -> entity.Product:
         ...
 
@@ -40,7 +39,6 @@ class ProductManager(abc.ABC):
         description: str,
         stock: int,
         expiry_date: str,
-        alarms: list,
     ) -> entity.Product:
         ...
 
@@ -50,24 +48,3 @@ class ProductManager(abc.ABC):
         id: int,
     ) -> None:
         ...
-
-    # @abc.abstractmethod
-    # def create_alarm(self,
-    #                 product_name: str,
-    #                 alert_type: str,
-    #                 alert_date: str,
-    #                 is_active : bool,
-    #                 is_expired : bool
-    #                     ) -> entity.Alarm:
-    #     ...
-
-    # @abc.abstractmethod
-    # def update_alarm(self,
-    #                     id: int,
-    #                     product_name: str,
-    #                     alert_type: str,
-    #                     alert_date: str,
-    #                     is_active : bool,
-    #                     is_expired : bool
-    #                     ) -> entity.Alarm:
-    #     ...

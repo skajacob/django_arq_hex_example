@@ -7,7 +7,6 @@ from apps.webApp.models import products as products_models
 
 # Librerías de Terceros
 # Django REST Framework
-from rest_framework.permissions import DjangoModelPermissions
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 
@@ -15,15 +14,19 @@ from rest_framework import viewsets, status
 from drf_yasg.utils import swagger_auto_schema
 
 # Proyecto
-# Project, product engine imports
+# Product & Alarm engine imports
 from ....adapters.secondaries.factory import constructor_products as products_repo
+from ....adapters.secondaries.factory import constructor_alarms as alarms_repo
 from ....engine.domain.exceptions import exceptions_products as exceptions
-from ....engine.use_cases import factory as products_engine
+from ....engine.use_cases import factory as engine
 from . import products_serializer
 
 # product engine implementation
 products_repository = products_repo.constructor_products(products_models.Product)
-products_engine = products_engine.constructor_manager_products(products_repository)
+products_engine = engine.constructor_manager_products(products_repository)
+# Alarm engine implementation
+alarms_repository = alarms_repo.constructor_alarms(products_models.Alarm)
+alarms_engine = engine.constructor_manager_alarms(alarms_repository)
 
 
 class ProductsViewSet(viewsets.GenericViewSet):
@@ -32,7 +35,7 @@ class ProductsViewSet(viewsets.GenericViewSet):
     """
 
     serializer_class = products_serializer.ProductSerializer
-    permission_classes = [DjangoModelPermissions]
+    # permission_classes = [DjangoModelPermissions]
     queryset = products_models.Product.objects.all()
 
     @swagger_auto_schema(
@@ -49,14 +52,16 @@ class ProductsViewSet(viewsets.GenericViewSet):
         )
         product_query_params_serializer.is_valid(raise_exception=True)
 
+        id_product = product_query_params_serializer.validated_data.get("id")
         from_date = product_query_params_serializer.validated_data.get("from_date")
         to_date = product_query_params_serializer.validated_data.get("to_date")
 
-        if from_date is not None and to_date is not None:
+        if from_date is not None and to_date is not None or id_product is not None:
             try:
                 product_data = products_engine.get_product(
                     from_date=from_date, to_date=to_date
                 )
+
                 get_product = products_serializer.ProductSerializer(
                     data=product_data.__dict__
                 )
@@ -78,11 +83,26 @@ class ProductsViewSet(viewsets.GenericViewSet):
                 )
 
         products = products_engine.list_products()
+        alarms = alarms_engine.list_alarms()
 
-        products = [entidad.__dict__ for entidad in products]
+        products_data = [product.__dict__ for product in products]
+        alarms_data = [alarm.__dict__ for alarm in alarms]
 
+        # Combinar productos y alarmas en una lista de diccionarios
+        merged_data = []
+        for product_data in products_data:
+            product_id = product_data["id"]
+            product_alarms = [
+                alarm_data
+                for alarm_data in alarms_data
+                if alarm_data["product_id"] == product_id
+            ]
+            product_data["alarms"] = product_alarms
+            merged_data.append(product_data)
+
+        print(merged_data)
         product_serializer = products_serializer.ProductSerializer(
-            data=products, many=True
+            data=merged_data, many=True
         )
         product_serializer.is_valid(raise_exception=True)
 
@@ -185,7 +205,7 @@ class ProductsViewSet(viewsets.GenericViewSet):
             status.HTTP_400_BAD_REQUEST: NotFoundSerializer,
         },
     )
-    def delete_customer(self, request) -> Response:
+    def delete_product(self, request) -> Response:
         product_query_params_serializer = (
             products_serializer.ProductQueryParamsSerializer(data=request.query_params)
         )

@@ -23,6 +23,11 @@ RUN apt-get update && \
 RUN export LD_LIBRARY_PATH=/usr/lib
 
 # Install requirements
+RUN pip install geos
+
+RUN export GDAL_LIBRARY_PATH=$(locate libgdal.so)
+RUN export GEOS_LIBRARY_PATH=$(locate libgeos_c.so)
+
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the current directory contents into the container at /app

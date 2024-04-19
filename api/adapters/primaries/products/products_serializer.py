@@ -8,7 +8,7 @@ class AlarmSerializer(serializers.Serializer):
     """Serializer for Alarms"""
 
     id = serializers.IntegerField(required=False)
-    product_name = serializers.CharField()
+    product_id = serializers.CharField()
     alert_type = serializers.CharField()
     alert_date = serializers.CharField()
     is_active = serializers.BooleanField()
@@ -21,8 +21,8 @@ class ProductSerializer(serializers.Serializer):
     product_name = serializers.CharField()
     description = serializers.CharField()
     stock = serializers.IntegerField()
-    expiry_date = serializers.CharField()
-    alarms = AlarmSerializer()
+    expiry_date = serializers.DateTimeField()
+    alarms = AlarmSerializer(required=False)
 
 
 class ProductQueryParamsSerializer(serializers.Serializer):

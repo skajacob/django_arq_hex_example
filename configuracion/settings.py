@@ -62,6 +62,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "querycount.middleware.QueryCountMiddleware",
 ]
 
 ROOT_URLCONF = "configuracion.urls"
@@ -91,7 +92,7 @@ WSGI_APPLICATION = "configuracion.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": env.str("DB_ENGINE"),
-        "NAME": env.str("DB_NAME"),
+        "NAME": "cheaf-db",
         "USER": env.str("DB_USER"),
         "PASSWORD": env.str("DB_PASSWORD"),
         "HOST": env.str("DB_HOST"),
@@ -122,6 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = "backoffice.Administrator"
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/

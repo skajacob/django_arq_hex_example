@@ -4,7 +4,7 @@ En este proyecto se implementa una API REST con arquitectura hexagonal y desarro
 ## Clonar repositorio
 
 ```
-git clone https://github.com/nxiodev/django_arq_hex_example
+git clone https://github.com/skajacob/django_arq_hex_example.git
 ```
 
 ## Bases de datos:
@@ -43,7 +43,7 @@ git clone https://github.com/nxiodev/django_arq_hex_example
     DB_PASSWORD=
     DB_HOST=127.0.0.1
     DB_PORT=5432
-    DB_NAME=paycode-db
+    DB_NAME=cheaf-db
     DB_ENGINE=django.db.backends.postgresql_psycopg2
 
    ```
@@ -57,7 +57,7 @@ git clone https://github.com/nxiodev/django_arq_hex_example
 6. Ahora instala los fixtures para el dummy data
 
    ```ssh
-   python .\manage.py loaddata .\fixtures\data.json
+   python manage.py loaddata .\fixtures\data.json
    ```
    
 6. Inicia el servidor
@@ -81,7 +81,7 @@ El proyecto cuenta con un usuarios cargados en los fixtures.
 Las credenciales de cada uno son las siguientes:
 
 - **super_administrator** :
-  - email: dj-superadmin@paycode.io 
+  - email: dj-superadmin@cheaf.io 
   - password: admin123
 
 

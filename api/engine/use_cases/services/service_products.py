@@ -3,9 +3,8 @@
 # Librerias Estandar
 import typing
 
-from api.engine.use_cases.ports.secondaries import repository_products as repository
-
 # Project Libraries
+from api.engine.use_cases.ports.secondaries import repository_products as repository
 from api.engine.use_cases.ports.primaries import manager_products as manager
 
 # Entity
@@ -30,25 +29,22 @@ class ProductService(manager.ProductManager):
         description: str,
         stock: int,
         expiry_date: str,
-        alarms: list,
     ) -> entity.Product:
         product = self.products_repository.create_product(
             product_name=product_name,
             description=description,
             stock=stock,
             expiry_date=expiry_date,
-            alarms=alarms,
         )
         return product
 
     def update_product(
         self,
-        id: int,
-        product_name: str,
-        description: str,
-        stock: int,
-        expiry_date: str,
-        alarms: list,
+        id: typing.Optional[int],
+        product_name: typing.Optional[str],
+        description: typing.Optional[str],
+        stock: typing.Optional[int],
+        expiry_date: typing.Optional[str],
     ) -> entity.Product:
         product = self.products_repository.update_product(
             id=id,
@@ -56,7 +52,6 @@ class ProductService(manager.ProductManager):
             description=description,
             stock=stock,
             expiry_date=expiry_date,
-            alarms=alarms,
         )
         return product
 
@@ -68,41 +63,3 @@ class ProductService(manager.ProductManager):
             id=id,
         )
         return None
-
-    # def create_alarm(
-    #     self,
-    #     product_name: str,
-    #     alert_type: str,
-    #     alert_date: str,
-    #     is_active : bool,
-    #     is_expired : bool
-    # ) -> entity.Product:
-
-    #     alarm = self.products_repository.create_alarm(
-    #         product_name= product_name,
-    #         alert_type= alert_type,
-    #         alert_date= alert_date,
-    #         is_active= is_active,
-    #         is_expired = is_expired
-    #     )
-    #     return alarm
-
-    # def update_alarm(
-    #     self,
-    #     id: int,
-    #     product_name: str,
-    #     alert_type: str,
-    #     alert_date: str,
-    #     is_active : bool,
-    #     is_expired : bool
-    # ) -> entity.Alarm:
-
-    #     alarm = self.products_repository.update_alarm(
-    #         id=id,
-    #         product_name= product_name,
-    #         alert_type= alert_type,
-    #         alert_date= alert_date,
-    #         is_active= is_active,
-    #         is_expired = is_expired
-    #     )
-    #     return alarm

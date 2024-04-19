@@ -34,40 +34,36 @@ class Product(repository.ProductRepository):
         description: str,
         stock: int,
         expiry_date: str,
-        alarms: list,
     ) -> entity.Product:
         product = self._products_orm_model.objects.create(
             product_name=product_name,
             description=description,
             stock=stock,
             expiry_date=expiry_date,
-            alarms=alarms,
         )
 
         return orm_mapper.constructor_products_entities(product)
 
     def update_product(
         self,
-        id: int,
-        product_name: str,
-        description: str,
-        stock: int,
-        expiry_date: str,
-        alarms: list,
+        id: typing.Optional[int],
+        product_name: typing.Optional[str],
+        description: typing.Optional[str],
+        stock: typing.Optional[int],
+        expiry_date: typing.Optional[str],
     ) -> entity.Product:
         product = self._products_orm_model.objects.get(id=id)
-        product.product_name = product_name
-        product.description = description
-        product.stock = stock
-        product.expiry_date = expiry_date
-        product.alarms = alarms
+
+        product.product_name = product_name if product_name else product.product_name
+        product.description = description if description else product.description
+        product.stock = stock if stock else product.stock
+        product.expiry_date = expiry_date if expiry_date else product.expiry_date
         product.save(
             update_fields=[
                 "product_name",
                 "description",
                 "stock",
                 "expiry_date",
-                "alarms",
             ]
         )
 
