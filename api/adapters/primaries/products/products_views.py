@@ -56,13 +56,27 @@ class ProductsViewSet(viewsets.GenericViewSet):
 
         if from_date is not None and to_date is not None:
             try:
-                product_data = products_engine.get_product(
+                products = products_engine.get_product(
                     from_date=from_date, to_date=to_date
                 )
 
-                get_product = products_serializer.ProductSerializer(
-                    data=product_data.__dict__
-                )
+                alarms = alarms_engine.get_alarm(from_date=from_date, to_date=to_date)
+
+                products_data = [product.__dict__ for product in products]
+                alarms_data = [alarm.__dict__ for alarm in alarms]
+                merged_data = [
+                    {
+                        **product_data,
+                        "alarms": [
+                            alarm_data
+                            for alarm_data in alarms_data
+                            if alarm_data["product_id"] == product_data["id"]
+                        ],
+                    }
+                    for product_data in products_data
+                ]
+
+                get_product = products_serializer.ProductSerializer(data=merged_data)
                 get_product.is_valid(raise_exception=True)
 
                 product = get_product.validated_data
@@ -164,7 +178,6 @@ class ProductsViewSet(viewsets.GenericViewSet):
         product_query_params_serializer.is_valid(raise_exception=True)
 
         product_id = product_query_params_serializer.validated_data.get("id")
-
         product_serializer = products_serializer.ProductSerializer(data=request.data)
         product_serializer.is_valid(raise_exception=True)
 

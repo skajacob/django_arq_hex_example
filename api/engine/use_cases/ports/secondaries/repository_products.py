@@ -18,7 +18,7 @@ class ProductRepository(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_product(self, id: int) -> entity.Product:
+    def get_product(self, from_date: str, to_date: str) -> entity.Product:
         ...
 
     @abc.abstractmethod

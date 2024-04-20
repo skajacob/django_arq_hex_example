@@ -168,14 +168,14 @@ SWAGGER_SETTINGS = {
     }
 }
 
+CELERY_BEAT_SCHEDULE = {
+    "example-task": {
+        "task": "api.adapters.primaries.products.tasks.create_expiry_alarms",
+        "schedule": 10.0,
+    },
+}
 
 # OSGeo4W settings
-# GDAL_LIBRARY_PATH = os.path.join(os.environ['OSGEO4W_ROOT'], 'bin', 'gdal306.dll')
-# GEOS_LIBRARY_PATH = os.path.join(os.environ['OSGEO4W_ROOT'], 'bin', 'geos_c.dll')
-
-# GDAL_LIBRARY_PATH = os.path.join(os.environ['GDAL_LIBRARY_PATH'])
-# GEOS_LIBRARY_PATH = os.path.join(os.environ['GEOS_LIBRARY_PATH'])
-
 # Set the GDAL and GEOS library paths
 try:
     GDAL_LIBRARY_PATH = os.path.join(os.environ["OSGEO4W_ROOT"], "bin", "gdal306.dll")

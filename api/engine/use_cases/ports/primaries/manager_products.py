@@ -18,7 +18,7 @@ class ProductManager(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_product(self, expiry_date: str) -> entity.Product:
+    def get_product(self, from_date: str, to_date: str) -> entity.Product:
         ...
 
     @abc.abstractmethod

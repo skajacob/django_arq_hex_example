@@ -2,6 +2,7 @@
 # Standard Libraries
 # Librerias Estandar
 import typing
+from datetime import datetime
 
 # Engine
 from api.engine.use_cases.ports.secondaries import repository_products as repository
@@ -24,9 +25,15 @@ class Product(repository.ProductRepository):
             for product in self._products_orm_model.objects.all()
         ]
 
-    def get_product(self, product_id: int) -> entity.Product:
-        product = self._products_orm_model.objects.get(id=product_id)
-        return orm_mapper.constructor_products_entities(product)
+    def get_product(self, from_date: str, to_date: str) -> entity.Product:
+        from_date_obj = datetime.strptime(from_date, "%Y-%m-%d").date()
+        to_date_obj = datetime.strptime(to_date, "%Y-%m-%d").date()
+        products = self._products_orm_model.objects.filter(
+            expiry_date__range=(from_date_obj, to_date_obj)
+        )
+        return [
+            orm_mapper.constructor_products_entities(product) for product in products
+        ]
 
     def create_product(
         self,

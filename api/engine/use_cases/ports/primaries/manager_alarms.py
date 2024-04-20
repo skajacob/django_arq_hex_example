@@ -18,7 +18,7 @@ class AlarmManager(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_alarm(self, product_id: int) -> entity.Alarm:
+    def get_alarm(self, from_date: str, to_date: str) -> entity.Alarm:
         ...
 
     @abc.abstractmethod

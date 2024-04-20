@@ -2,6 +2,7 @@
 # Standard Libraries
 # Librerias Estandar
 import typing
+from datetime import datetime
 
 # Engine
 from api.engine.use_cases.ports.secondaries import repository_alarms as repository
@@ -24,8 +25,12 @@ class Alarm(repository.AlarmRepository):
             for alarms in self._alarms_orm_model.objects.all()
         ]
 
-    def get_alarm(self, product_id: int) -> entity.Alarm:
-        alarm = self._alarms_orm_model.objects.get(id=product_id)
+    def get_alarm(self, from_date: str, to_date: str) -> entity.Alarm:
+        from_date_obj = datetime.strptime(from_date, "%Y-%m-%d").date()
+        to_date_obj = datetime.strptime(to_date, "%Y-%m-%d").date()
+        alarm = self._alarms_orm_model.objects.filter(
+            alert_date__range=(from_date_obj, to_date_obj)
+        ).values()
         return orm_mapper.constructor_alarms_entities(alarm)
 
     def create_alarm(
