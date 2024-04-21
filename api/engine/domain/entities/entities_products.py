@@ -1,5 +1,10 @@
 # Librerias Estandar
+import typing
 from dataclasses import dataclass
+
+# Proyecto
+# Entity Alarm
+from .entities_alarms import Alarm
 
 
 @dataclass
@@ -9,3 +14,4 @@ class Product:
     description: str
     stock: int
     expiry_date: str
+    alarms: typing.Optional[list[Alarm]] = None

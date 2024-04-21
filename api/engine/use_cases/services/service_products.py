@@ -20,10 +20,20 @@ class ProductService(manager.ProductManager):
     def list_products(self) -> typing.List[entity.Product]:
         return self.products_repository.list_products()
 
-    def get_product(self, from_date: str, to_date: str) -> entity.Product:
-        return self.products_repository.get_product(
+    def get_product_without_asigned_alarms(
+        self,
+    ) -> typing.List[entity.Product]:
+        return self.products_repository.get_product_without_asigned_alarms()
+
+    def get_product_with_alarms(
+        self, from_date: str, to_date: str
+    ) -> typing.List[entity.Product]:
+        return self.products_repository.get_product_with_alarms(
             from_date=from_date, to_date=to_date
         )
+
+    def get_product(self, id_product: int) -> entity.Product:
+        return self.products_repository.get_product(id_product=id_product)
 
     def create_product(
         self,

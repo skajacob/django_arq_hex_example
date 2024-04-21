@@ -174,6 +174,12 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": 10.0,
     },
 }
+CELERY_BEAT_SCHEDULE = {
+    "create_alarms_task": {
+        "task": "api.adapters.primaries.products.tasks.create_expiry_alarms",
+        "schedule": datetime.timedelta(days=1),  # Ejecutar diariamente
+    },
+}
 
 # OSGeo4W settings
 # Set the GDAL and GEOS library paths

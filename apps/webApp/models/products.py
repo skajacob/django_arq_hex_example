@@ -22,7 +22,7 @@ class Product(TimestampedModel):
 
 class Alarm(TimestampedModel):
     product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, verbose_name="Product"
+        Product, on_delete=models.CASCADE, related_name="alarms"
     )
     alert_type = models.CharField(max_length=20, verbose_name="Alert Type")
     alert_date = models.DateField(verbose_name="Alert Date")

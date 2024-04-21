@@ -18,7 +18,19 @@ class ProductManager(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_product(self, from_date: str, to_date: str) -> entity.Product:
+    def get_product_without_asigned_alarms(
+        self,
+    ) -> typing.List[entity.Product]:
+        ...
+
+    @abc.abstractmethod
+    def get_product_with_alarms(
+        self, from_date: str, to_date: str
+    ) -> typing.List[entity.Product]:
+        ...
+
+    @abc.abstractmethod
+    def get_product(self, id_product: int) -> entity.Product:
         ...
 
     @abc.abstractmethod

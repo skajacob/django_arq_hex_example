@@ -10,9 +10,11 @@ from api.engine.use_cases.factory import orm_mapper
 
 # Entity
 from api.engine.domain.entities import entities_products as entity
-
-# ORM
 from apps.webApp.models import products as product_models
+
+# Librerías de Terceros
+# Models
+from django.db.models import Count
 
 
 class Product(repository.ProductRepository):
@@ -22,18 +24,36 @@ class Product(repository.ProductRepository):
     def list_products(self) -> typing.List[entity.Product]:
         return [
             orm_mapper.constructor_products_entities(product)
-            for product in self._products_orm_model.objects.all()
+            for product in self._products_orm_model.objects.all().prefetch_related(
+                "alarms"
+            )
         ]
 
-    def get_product(self, from_date: str, to_date: str) -> entity.Product:
+    def get_product_with_alarms(
+        self, from_date: str, to_date: str
+    ) -> typing.List[entity.Product]:
         from_date_obj = datetime.strptime(from_date, "%Y-%m-%d").date()
         to_date_obj = datetime.strptime(to_date, "%Y-%m-%d").date()
-        products = self._products_orm_model.objects.filter(
+
+        products_with_alarms = self._products_orm_model.objects.filter(
             expiry_date__range=(from_date_obj, to_date_obj)
-        )
+        ).prefetch_related("alarms")
         return [
-            orm_mapper.constructor_products_entities(product) for product in products
+            orm_mapper.constructor_products_entities(product)
+            for product in products_with_alarms
         ]
+
+    def get_product_without_asigned_alarms(self) -> typing.List[entity.Product]:
+        return [
+            orm_mapper.constructor_products_entities(product)
+            for product in self._products_orm_model.objects.annotate(
+                num_alarms=Count("alarms")
+            ).filter(num_alarms=0)
+        ]
+
+    def get_product(self, id_product: int) -> entity.Product:
+        products = self._products_orm_model.objects.filter(id=id_product)
+        return orm_mapper.constructor_products_entities(products)
 
     def create_product(
         self,
@@ -48,7 +68,6 @@ class Product(repository.ProductRepository):
             stock=stock,
             expiry_date=expiry_date,
         )
-
         return orm_mapper.constructor_products_entities(product)
 
     def update_product(

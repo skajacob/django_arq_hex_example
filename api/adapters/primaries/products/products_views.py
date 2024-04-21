@@ -19,6 +19,9 @@ from ....adapters.secondaries.factory import constructor_products as products_re
 from ....adapters.secondaries.factory import constructor_alarms as alarms_repo
 from ....engine.domain.exceptions import exceptions_products as exceptions
 from ....engine.use_cases import factory as engine
+
+# Celery task
+from .tasks import create_product_alarms
 from . import products_serializer
 
 # product engine implementation
@@ -56,27 +59,21 @@ class ProductsViewSet(viewsets.GenericViewSet):
 
         if from_date is not None and to_date is not None:
             try:
-                products = products_engine.get_product(
+                products = products_engine.get_product_with_alarms(
                     from_date=from_date, to_date=to_date
                 )
-
-                alarms = alarms_engine.get_alarm(from_date=from_date, to_date=to_date)
-
-                products_data = [product.__dict__ for product in products]
-                alarms_data = [alarm.__dict__ for alarm in alarms]
-                merged_data = [
-                    {
-                        **product_data,
-                        "alarms": [
-                            alarm_data
-                            for alarm_data in alarms_data
-                            if alarm_data["product_id"] == product_data["id"]
-                        ],
+                product_data = []
+                for product in products:
+                    product_dict = {
+                        "id": product.id,
+                        "product_name": product.product_name,
+                        "description": product.description,
+                        "stock": product.stock,
+                        "expiry_date": product.expiry_date,
+                        "alarms": [alarm.__dict__ for alarm in product.alarms],
                     }
-                    for product_data in products_data
-                ]
-
-                get_product = products_serializer.ProductSerializer(data=merged_data)
+                    product_data.append(product_dict)
+                get_product = products_serializer.ProductSerializer(data=product_data)
                 get_product.is_valid(raise_exception=True)
 
                 product = get_product.validated_data
@@ -95,25 +92,21 @@ class ProductsViewSet(viewsets.GenericViewSet):
                 )
 
         products = products_engine.list_products()
-        alarms = alarms_engine.list_alarms()
 
-        products_data = [product.__dict__ for product in products]
-        alarms_data = [alarm.__dict__ for alarm in alarms]
-
-        merged_data = [
-            {
-                **product_data,
-                "alarms": [
-                    alarm_data
-                    for alarm_data in alarms_data
-                    if alarm_data["product_id"] == product_data["id"]
-                ],
+        product_data = []
+        for product in products:
+            product_dict = {
+                "id": product.id,
+                "product_name": product.product_name,
+                "description": product.description,
+                "stock": product.stock,
+                "expiry_date": product.expiry_date,
+                "alarms": [alarm.__dict__ for alarm in product.alarms],
             }
-            for product_data in products_data
-        ]
+            product_data.append(product_dict)
 
         product_serializer = products_serializer.ProductSerializer(
-            data=merged_data, many=True
+            data=product_data, many=True
         )
         product_serializer.is_valid(raise_exception=True)
 
@@ -142,7 +135,8 @@ class ProductsViewSet(viewsets.GenericViewSet):
                 stock=product_serializer.validated_data.get("stock"),
                 expiry_date=product_serializer.validated_data.get("expiry_date"),
             )
-
+            product_id = product.id
+            create_product_alarms.delay(product_id)
             product = product.__dict__
         except Exception as e:
             print(f"'{e}' exception raised in {__name__} at line 119")
