@@ -96,9 +96,9 @@ class ProductsViewSet(viewsets.GenericViewSet):
         return Response(response_data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
-        request_body=products_serializer.ProductSerializer(),
+        request_body=products_serializer.ProductSwaggerSerializer(),
         responses={
-            status.HTTP_201_CREATED: products_serializer.ProductSerializer(),
+            status.HTTP_201_CREATED: products_serializer.ProductSwaggerSerializer(),
             status.HTTP_400_BAD_REQUEST: NotFoundSerializer,
         },
     )
@@ -135,9 +135,9 @@ class ProductsViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(
         query_serializer=products_serializer.ProductQueryParamsSerializer(),
-        request_body=products_serializer.ProductSerializer(),
+        request_body=products_serializer.ProductSwaggerSerializer(),
         responses={
-            status.HTTP_201_CREATED: products_serializer.ProductSerializer(),
+            status.HTTP_201_CREATED: products_serializer.ProductSwaggerSerializer(),
             status.HTTP_400_BAD_REQUEST: NotFoundSerializer,
         },
     )
@@ -181,7 +181,7 @@ class ProductsViewSet(viewsets.GenericViewSet):
 
     @swagger_auto_schema(
         query_serializer=products_serializer.ProductQueryParamsSerializer(),
-        request_body=products_serializer.ProductSerializer(),
+        request_body=products_serializer.ProductSwaggerSerializer(),
         responses={
             status.HTTP_204_NO_CONTENT: "",
             status.HTTP_400_BAD_REQUEST: NotFoundSerializer,
@@ -220,9 +220,9 @@ class AlarmsViewSet(viewsets.GenericViewSet):
     queryset = products_models.Alarm.objects.all()
 
     @swagger_auto_schema(
-        request_body=products_serializer.AlarmSerializer(),
+        request_body=products_serializer.AlarmSwaggerSerializer(),
         responses={
-            status.HTTP_201_CREATED: products_serializer.AlarmSerializer(),
+            status.HTTP_201_CREATED: products_serializer.AlarmSwaggerSerializer(),
             status.HTTP_400_BAD_REQUEST: NotFoundSerializer,
         },
     )

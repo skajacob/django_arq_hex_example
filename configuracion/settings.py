@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_yasg",
     "rest_framework_simplejwt",
+    #Django cron
+    'django_cron'
     # Apps
     "apps.webApp",
     "apps.backoffice",
