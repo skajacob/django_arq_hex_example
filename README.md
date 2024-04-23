@@ -63,9 +63,9 @@ git clone https://github.com/skajacob/django_arq_hex_example.git
     GEOS_LIBRARY_PATH=C:/OSGeo4W/bin/geos_c.dll
     
 
-    ```
+   
     NOTA: SI NO TIENES LAS LIBREARIAS DE GEODJANGO ELIMINAR DEL SETTING.PY LA CONFIGURACION DE GEODJANGO Y SUSTITUIR POR VARIABLE DB_ENGINE = django.db.backends.postgresql_psycopg2
-    ```
+ 
        
    ``` 
 5. En la misma carpeta ejecuta las migraciones
@@ -88,11 +88,13 @@ git clone https://github.com/skajacob/django_arq_hex_example.git
 7. En una terminal nueva nicia el redis-servidor(descargar Redis-x64-3.0.504.zip en 
  https://github.com/microsoftarchive/redis/releases y agregarla a las variables de entorno)
 
-   ```redis-server 
+   ```ssh
+   redis-server 
     ```
 8. En un terminal nueva inicia el cronjob
 
-   ```celery -A apps.webApp worker --loglevel=info
+   ```ssh
+   celery -A apps.webApp worker --loglevel=info
     ```
 
 ## Desplegar proyecto con docker
@@ -143,6 +145,8 @@ git clone https://github.com/skajacob/django_arq_hex_example.git
     docker exec -it <id_container> bash
     python manage.py makemigrations;
     python manage.py migrate
+    redis-server 
+    celery -A apps.webApp worker --loglevel=info
     ```
 
    
