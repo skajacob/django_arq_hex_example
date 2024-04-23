@@ -60,6 +60,7 @@ class ProductSerializer(serializers.Serializer):
     expiry_date = serializers.DateField()
     alarms = AlarmSerializer(required=False, many=True)
 
+
 class ProductSwaggerSerializer(serializers.Serializer):
     """Serializer for Products"""
 
@@ -77,6 +78,7 @@ class AlarmSwaggerSerializer(serializers.Serializer):
     product_id = serializers.IntegerField()
     alert_type = serializers.CharField()
     alert_date = serializers.DateField()
+
 
 class ProductQueryParamsSerializer(serializers.Serializer):
     """Serializer for ProductsQueryParams"""

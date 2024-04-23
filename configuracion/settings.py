@@ -14,6 +14,7 @@ import os
 import datetime
 from pathlib import Path
 from environs import Env
+from celery.schedules import crontab
 
 
 env = Env()
@@ -48,8 +49,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_yasg",
     "rest_framework_simplejwt",
-    #Django cron
-    'django_cron'
     # Apps
     "apps.webApp",
     "apps.backoffice",
@@ -169,22 +168,15 @@ SWAGGER_SETTINGS = {
     }
 }
 
-CELERY_BEAT_SCHEDULE = {
-    "example-task": {
-        "task": "api.adapters.primaries.products.tasks.create_expiry_alarms",
-        "schedule": 10.0,
-    },
-}
-
 # Cronjobs Celery
 CELERY_BEAT_SCHEDULE = {
     "create_alarms_task": {
         "task": "api.adapters.primaries.products.tasks.create_expiry_alarms",
-        "schedule": 10.0,
+        "schedule": datetime.timedelta(hours=4),
     },
     "send_notifications_daily": {
         "task": "app..adapters.primaries.products.tasks.send_notifications_for_today_alarms",
-        "schedule": 10.0,
+        "schedule": crontab(hour=0, minute=0),
     },
 }
 
