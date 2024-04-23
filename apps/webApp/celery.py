@@ -13,3 +13,6 @@ app = Celery("apps.webApp")
 app.config_from_object("django.conf:settings", namespace="CELERY")
 
 app.autodiscover_tasks()
+
+app.conf.task_events = True
+

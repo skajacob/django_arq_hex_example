@@ -187,11 +187,11 @@ CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
 # Cronjobs Celery
 CELERY_BEAT_SCHEDULE = {
     "create_alarms_task": {
-        "task": "apps.webApp.tasks.create_expiry_alarms",
+        "task": "api.adapters.primaries.products.tasks.create_product_alarms",
         "schedule": datetime.timedelta(hours=4),
     },
     "send_notifications_daily": {
-        "task": "apps.webApp.tasks.send_notifications_for_today_alarms",
+        "task": "api.adapters.primaries.products.tasks.send_notifications_for_today_alarms",
         "schedule": crontab(hour=0, minute=0),
     },
 }
