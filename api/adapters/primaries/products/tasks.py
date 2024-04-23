@@ -29,8 +29,6 @@ def create_product_alarms():
     """cronjob for create alarms for products"""
     products = products_engine.list_products()
 
-    print("hola para crear alarmas")
-
     for product in products:
         expiry_date = product.expiry_date
 
@@ -63,7 +61,6 @@ def create_product_alarms():
 def send_notifications_for_today_alarms():
     products = products_engine.list_products()
     today = datetime.now().date()
-    print("hola para mandar notificaciones")
     for product in products:
         today_alarms = [alarm for alarm in product.alarms if alarm.alert_date == today]
         for alarm in today_alarms:

@@ -31,26 +31,43 @@ git clone https://github.com/skajacob/django_arq_hex_example.git
 ```
    createdb -U postgres -W -h 127.0.0.1 -p 5432 cheaf-db 
  ```
-4. Situate en la carpeta del proyecto para crear tu archivo .env pon tus credenciasles de la bases de datos y tu correo con la ocntraseña para el servicio de notificaciones
+4. Situate en la carpeta del proyecto para crear tu archivo .env pon tus credenciales de la bases de datos y tu correo con la contraseña para el servicio de notificaciones
    ```ssh
     DEBUG=True
     SECRET_KEY='11111111111818181818181811111111'
     ALLOWED_HOSTS=*
     
+    #redis
+    REDIS_HOST=127.0.0.1
+    REDIS_PORT=6379
+    REDIS_DB_NAME = 0
     
+    # Database
     DB_USER=
     DB_PASSWORD=
     DB_HOST=127.0.0.1
     DB_PORT=5432
     DB_NAME=cheaf-db
     DB_ENGINE=django.contrib.gis.db.backends.postgis
-    
 
+    # email service 
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = "smtp.gmail.com"
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
     EMAIL_HOST_USER=
     EMAIL_HOST_PASSWORD=
-    ```   
-   ```
-   `NOTA: Usa tu usuario y contraseña de postgres`
+
+    # GDAL and GEOS settings
+    GDAL_LIBRARY_PATH =C:/OSGeo4W/bin/gdal307.dll
+    GEOS_LIBRARY_PATH=C:/OSGeo4W/bin/geos_c.dll
+    
+
+    ```
+    NOTA: SI NO TIENES LAS LIBREARIAS DE GEODJANGO ELIMINAR DEL SETTING.PY LA CONFIGURACION DE GEODJANGO Y SUSTITUIR POR VARIABLE DB_ENGINE = django.db.backends.postgresql_psycopg2
+    ```
+       
+   ``` 
 5. En la misma carpeta ejecuta las migraciones
 
    ```ssh
