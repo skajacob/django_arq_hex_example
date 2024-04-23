@@ -3,7 +3,6 @@ import typing
 from dataclasses import dataclass
 
 # Proyecto
-# Entity Alarm
 from .entities_alarms import Alarm
 
 

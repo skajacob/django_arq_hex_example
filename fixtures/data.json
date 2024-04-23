@@ -195,7 +195,7 @@
             "product_name": "Donas Glaseadas",
             "description": "Donas Glaseadas Krispy Kreme",
             "stock": 100,
-            "expiry_date":"2024-05-03T21:53:41.081Z"
+            "expiry_date":"2024-05-03"
         }
     },
     {
@@ -207,7 +207,7 @@
             "product_name": "Donas Rellenas de Nutella",
             "description": "Donas Rellenas de Nutella Krispy Kreme",
             "stock": 50,
-            "expiry_date":"2024-05-03T21:53:41.081Z"
+            "expiry_date":"2024-05-03"
         }
     },
     {
@@ -219,7 +219,7 @@
             "product_name": "Donas Rellenas de Mermelada",
             "description": "Donas Rellenas de Mermelada Krispy Kreme",
             "stock": 25,
-            "expiry_date":"2024-07-27T21:53:41.081Z"
+            "expiry_date":"2024-07-27"
         }
     },
     {

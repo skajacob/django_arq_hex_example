@@ -10,7 +10,7 @@ class Product(TimestampedModel):
     )
     description = models.CharField(max_length=500)
     stock = models.IntegerField(verbose_name="Stock Quantity")
-    expiry_date = models.DateTimeField(verbose_name="Expiry Date")
+    expiry_date = models.DateField(verbose_name="Expiry Date")
 
     def __str__(self):
         return self.product_name

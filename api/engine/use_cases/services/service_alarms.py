@@ -20,21 +20,28 @@ class AlarmService(manager.AlarmManager):
     def list_alarms(self) -> typing.List[entity.Alarm]:
         return self.alarms_repository.list_alarms()
 
-    def get_alarm(self, from_date: str, to_date: str) -> entity.Alarm:
-        return self.alarms_repository.get_alarm(from_date=from_date, to_date=to_date)
+    def get_alarm_by_date(self, from_date: str, to_date: str) -> entity.Alarm:
+        return self.alarms_repository.get_alarm_by_date(
+            from_date=from_date, to_date=to_date
+        )
+
+    def get_alarm_by_product_id_type(
+        self, product_id: str, alert_type: str
+    ) -> entity.Alarm:
+        return self.alarms_repository.get_alarm_by_product_id_type(
+            product_id=product_id, alert_type=alert_type
+        )
 
     def create_alarm(
         self,
         product_id: str,
         alert_type: str,
         alert_date: str,
-        is_active: bool,
     ) -> entity.Alarm:
         alarm = self.alarms_repository.create_alarm(
             product_id=product_id,
             alert_type=alert_type,
             alert_date=alert_date,
-            is_active=is_active,
         )
         return alarm
 

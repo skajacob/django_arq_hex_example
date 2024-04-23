@@ -36,11 +36,25 @@ null
                         {"alert_type": string,
                         "alert_day": string,
                         "is_active":bool,
-                        "is_expired":bool,},
+                        "is_expired":bool,
+                        "detail": {
+                                "is_active": bool,
+                                "is_expired": bool,
+                                "days_until_activation": int,
+                                "days_expired": int
+                                    }
+                            },
                         {"alert_type": string,
                         "alert_day": string,
                         "is_active":bool,
-                        "is_expired":bool,}
+                        "is_expired":bool,
+                        "detail": {
+                                "is_active": bool,
+                                "is_expired": bool,
+                                "days_until_activation": int,
+                                "days_expired": int
+                                    }
+                        }
                 ]
             },
             {
@@ -53,11 +67,25 @@ null
                         {"alert_type": string,
                         "alert_day": string,
                         "is_active":bool,
-                        "is_expired":bool,},
+                        "is_expired":bool,
+                        "detail": {
+                                "is_active": bool,
+                                "is_expired": bool,
+                                "days_until_activation": int,
+                                "days_expired": int
+                                    }
+                        },
                         {"alert_type": string,
                         "alert_day": string,
                         "is_active":bool,
-                        "is_expired":bool,}
+                        "is_expired":bool,
+                        "detail": {
+                                "is_active": bool,
+                                "is_expired": bool,
+                                "days_until_activation": int,
+                                "days_expired": int
+                                    }
+                        }
                 ]
             },
             {
@@ -70,11 +98,25 @@ null
                         {"alert_type": string,
                         "alert_day": string,
                         "is_active":bool,
-                        "is_expired":bool,},
+                        "is_expired":bool,
+                        "detail": {
+                                "is_active": bool,
+                                "is_expired": bool,
+                                "days_until_activation": int,
+                                "days_expired": int
+                                    }
+                        },
                         {"alert_type": string,
                         "alert_day": string,
                         "is_active":bool,
-                        "is_expired":bool,}
+                        "is_expired":bool,
+                        "detail": {
+                                "is_active": bool,
+                                "is_expired": bool,
+                                "days_until_activation": int,
+                                "days_expired": int
+                                    }
+                        }
                 ]
             },
             …
@@ -117,16 +159,7 @@ None
                 "is_active":bool,
                 "created_at":str,
                 "updated_at":str
-                "alarms":[
-                        {"alert_type": string,
-                        "alert_day": string,
-                        "is_active":bool,
-                        "is_expired":bool,},
-                        {"alert_type": string,
-                        "alert_day": string,
-                        "is_active":bool,
-                        "is_expired":bool,}
-                ]
+                
     }
 }
 ```
@@ -181,16 +214,6 @@ None
                 "is_active":bool,
                 "created_at":str,
                 "updated_at":str
-                "alarms":[
-                        {"alert_type": string,
-                        "alert_day": string,
-                        "is_active":bool,
-                        "is_expired":bool,},
-                        {"alert_type": string,
-                        "alert_day": string,
-                        "is_active":bool,
-                        "is_expired":bool,}
-                ]
                 }
 }
 ```

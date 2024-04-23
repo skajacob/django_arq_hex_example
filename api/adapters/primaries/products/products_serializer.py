@@ -31,14 +31,23 @@ def validate_fields(attrs):
         raise exceptions.InvalidSearchDate
 
 
+class DetailAlarmSerializer(serializers.Serializer):
+    "Serializer for Alarms detail"
+    is_active = serializers.BooleanField()
+    is_expired = serializers.BooleanField()
+    days_until_activation = serializers.IntegerField()
+    days_expired = serializers.IntegerField()
+
+
 class AlarmSerializer(serializers.Serializer):
     """Serializer for Alarms"""
 
     id = serializers.IntegerField(required=False)
-    product_id = serializers.CharField()
+    product_id = serializers.IntegerField()
     alert_type = serializers.CharField()
     alert_date = serializers.DateField()
-    is_active = serializers.BooleanField()
+    is_active = serializers.BooleanField(required=False)
+    detail = DetailAlarmSerializer(required=False)
 
 
 class ProductSerializer(serializers.Serializer):
@@ -48,13 +57,14 @@ class ProductSerializer(serializers.Serializer):
     product_name = serializers.CharField()
     description = serializers.CharField()
     stock = serializers.IntegerField()
-    expiry_date = serializers.DateTimeField()
+    expiry_date = serializers.DateField()
     alarms = AlarmSerializer(required=False, many=True)
 
 
 class ProductQueryParamsSerializer(serializers.Serializer):
     """Serializer for ProductsQueryParams"""
 
+    product_id = serializers.IntegerField(required=False)
     from_date = serializers.CharField(required=False)
     to_date = serializers.CharField(required=False)
 

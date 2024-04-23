@@ -6,8 +6,11 @@ from compartidos.serializers import NotFoundSerializer
 from apps.webApp.models import products as products_models
 
 # Librerías de Terceros
-# Django REST Framework
+from rest_framework.permissions import DjangoModelPermissions
 from rest_framework.response import Response
+
+# Django REST Framework
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 
 # Third party libraries
@@ -19,10 +22,7 @@ from ....adapters.secondaries.factory import constructor_products as products_re
 from ....adapters.secondaries.factory import constructor_alarms as alarms_repo
 from ....engine.domain.exceptions import exceptions_products as exceptions
 from ....engine.use_cases import factory as engine
-
-# Celery task
-from .tasks import create_product_alarms
-from . import products_serializer
+from . import products_serializer, utils
 
 # product engine implementation
 products_repository = products_repo.constructor_products(products_models.Product)
@@ -38,7 +38,7 @@ class ProductsViewSet(viewsets.GenericViewSet):
     """
 
     serializer_class = products_serializer.ProductSerializer
-    # permission_classes = [DjangoModelPermissions]
+    permission_classes = [DjangoModelPermissions]
     queryset = products_models.Product.objects.all()
 
     @swagger_auto_schema(
@@ -62,17 +62,7 @@ class ProductsViewSet(viewsets.GenericViewSet):
                 products = products_engine.get_product_with_alarms(
                     from_date=from_date, to_date=to_date
                 )
-                product_data = []
-                for product in products:
-                    product_dict = {
-                        "id": product.id,
-                        "product_name": product.product_name,
-                        "description": product.description,
-                        "stock": product.stock,
-                        "expiry_date": product.expiry_date,
-                        "alarms": [alarm.__dict__ for alarm in product.alarms],
-                    }
-                    product_data.append(product_dict)
+                product_data = utils.product_generator_data(products)
                 get_product = products_serializer.ProductSerializer(data=product_data)
                 get_product.is_valid(raise_exception=True)
 
@@ -92,18 +82,7 @@ class ProductsViewSet(viewsets.GenericViewSet):
                 )
 
         products = products_engine.list_products()
-
-        product_data = []
-        for product in products:
-            product_dict = {
-                "id": product.id,
-                "product_name": product.product_name,
-                "description": product.description,
-                "stock": product.stock,
-                "expiry_date": product.expiry_date,
-                "alarms": [alarm.__dict__ for alarm in product.alarms],
-            }
-            product_data.append(product_dict)
+        product_data = utils.product_generator_data(products)
 
         product_serializer = products_serializer.ProductSerializer(
             data=product_data, many=True
@@ -135,8 +114,6 @@ class ProductsViewSet(viewsets.GenericViewSet):
                 stock=product_serializer.validated_data.get("stock"),
                 expiry_date=product_serializer.validated_data.get("expiry_date"),
             )
-            product_id = product.id
-            create_product_alarms.delay(product_id)
             product = product.__dict__
         except Exception as e:
             print(f"'{e}' exception raised in {__name__} at line 119")
@@ -171,7 +148,7 @@ class ProductsViewSet(viewsets.GenericViewSet):
         )
         product_query_params_serializer.is_valid(raise_exception=True)
 
-        product_id = product_query_params_serializer.validated_data.get("id")
+        product_id = product_query_params_serializer.validated_data.get("product_id")
         product_serializer = products_serializer.ProductSerializer(data=request.data)
         product_serializer.is_valid(raise_exception=True)
 
@@ -184,7 +161,8 @@ class ProductsViewSet(viewsets.GenericViewSet):
                 expiry_date=product_serializer.validated_data.get("expiry_date"),
             )
 
-            product = product.__dict__
+            product_dict = product.__dict__
+            product_dict["alarms"] = [alarm.__dict__ for alarm in product.alarms]
         except Exception as e:
             print(f"'{e}' exception raised in {__name__} at line 173")
             return Response(
@@ -192,7 +170,7 @@ class ProductsViewSet(viewsets.GenericViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        product_serializer = products_serializer.ProductSerializer(data=product)
+        product_serializer = products_serializer.ProductSerializer(data=product_dict)
         product_serializer.is_valid(raise_exception=True)
 
         response_data = {
@@ -215,7 +193,7 @@ class ProductsViewSet(viewsets.GenericViewSet):
         )
         product_query_params_serializer.is_valid(raise_exception=True)
 
-        product_id = product_query_params_serializer.validated_data.get("id")
+        product_id = product_query_params_serializer.validated_data.get("product_id")
 
         try:
             product = products_engine.delete_product(id=product_id)
@@ -230,3 +208,51 @@ class ProductsViewSet(viewsets.GenericViewSet):
             "data": "",
         }
         return Response(response_data, status=status.HTTP_204_NO_CONTENT)
+
+
+class AlarmsViewSet(viewsets.GenericViewSet):
+    """
+    Alarms Create ViewSet
+    """
+
+    serializer_class = products_serializer.AlarmSerializer
+    permission_classes = [DjangoModelPermissions]
+    queryset = products_models.Alarm.objects.all()
+
+    @swagger_auto_schema(
+        request_body=products_serializer.AlarmSerializer(),
+        responses={
+            status.HTTP_201_CREATED: products_serializer.AlarmSerializer(),
+            status.HTTP_400_BAD_REQUEST: NotFoundSerializer,
+        },
+    )
+    def create_alarm(self, request) -> Response:
+        """view to create product"""
+        alarm_serializer = products_serializer.AlarmSerializer(data=request.data)
+        alarm_serializer.is_valid(raise_exception=True)
+
+        product_id = alarm_serializer.validated_data.get("product_id")
+
+        try:
+            product = get_object_or_404(products_models.Product, id=product_id)
+            alarms = alarms_engine.create_alarm(
+                product_id=product_id,
+                alert_type=alarm_serializer.validated_data.get("alert_type"),
+                alert_date=alarm_serializer.validated_data.get("alert_date"),
+            )
+            alarm = [alarm.__dict__ for alarm in alarms]
+        except Exception as e:
+            print(f"'{e}' exception raised in {__name__} at line 205")
+            return Response(
+                data=exceptions.ProductDoesNotExist(product_id).message,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        alarm_serializer = products_serializer.AlarmSerializer(data=alarm[0])
+        alarm_serializer.is_valid(raise_exception=True)
+
+        response_data = {
+            "detail": "",
+            "data": alarm_serializer.data,
+        }
+        return Response(response_data, status=status.HTTP_201_CREATED)

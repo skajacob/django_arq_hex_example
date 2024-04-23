@@ -18,7 +18,13 @@ class AlarmManager(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_alarm(self, from_date: str, to_date: str) -> entity.Alarm:
+    def get_alarm_by_date(self, from_date: str, to_date: str) -> entity.Alarm:
+        ...
+
+    @abc.abstractmethod
+    def get_alarm_by_product_id_type(
+        self, product_id: str, alert_type: str
+    ) -> entity.Alarm:
         ...
 
     @abc.abstractmethod
@@ -27,7 +33,6 @@ class AlarmManager(abc.ABC):
         product_id: str,
         alert_type: str,
         alert_date: str,
-        is_active: bool,
     ) -> entity.Alarm:
         ...
 

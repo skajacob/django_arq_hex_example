@@ -1,4 +1,5 @@
 # Librerias Estandar
+import typing
 from dataclasses import dataclass
 
 
@@ -8,4 +9,4 @@ class Alarm:
     product_id: str
     alert_type: str
     alert_date: str
-    is_active: bool
+    is_active: typing.Optional[bool] = None

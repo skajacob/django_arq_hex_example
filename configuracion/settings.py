@@ -10,12 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-
+import os
 import datetime
 from pathlib import Path
-import os
-
 from environs import Env
+
 
 env = Env()
 env.read_env()
@@ -174,12 +173,26 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": 10.0,
     },
 }
+
+# Cronjobs Celery
 CELERY_BEAT_SCHEDULE = {
     "create_alarms_task": {
         "task": "api.adapters.primaries.products.tasks.create_expiry_alarms",
-        "schedule": datetime.timedelta(days=1),  # Ejecutar diariamente
+        "schedule": 10.0,
+    },
+    "send_notifications_daily": {
+        "task": "app..adapters.primaries.products.tasks.send_notifications_for_today_alarms",
+        "schedule": 10.0,
     },
 }
+
+# email settings
+EMAIL_BACKEND = (env.str("EMAIL_BACKEND"),)
+EMAIL_HOST = (env.str("EMAIL_HOST"),)
+EMAIL_PORT = (env.str("EMAIL_PORT"),)
+EMAIL_USE_TLS = (env.str("EMAIL_USE_TLS"),)
+EMAIL_HOST_USER = (env.str("EMAIL_HOST_USER"),)
+EMAIL_HOST_PASSWORD = (env.str("EMAIL_HOST_PASSWORD"),)
 
 # OSGeo4W settings
 # Set the GDAL and GEOS library paths
