@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_yasg",
     "rest_framework_simplejwt",
+    # Third party libraries
+    "django_celery_beat",
     # Apps
     "apps.webApp",
     "apps.backoffice",
@@ -168,14 +170,28 @@ SWAGGER_SETTINGS = {
     }
 }
 
+from celery import Celery
+
+celery_app = Celery("configuracion")
+# Configuración de Celery mediante la configuración de Django
+celery_app.config_from_object("django.conf:settings", namespace="CELERY")
+
+# Buscar tareas en todos los módulos de la aplicación y registrarlas automáticamente
+celery_app.autodiscover_tasks()
+
+
+# Configuración de Celery
+CELERY_BROKER_URL = "redis://localhost:6379/0"
+CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
+
 # Cronjobs Celery
 CELERY_BEAT_SCHEDULE = {
     "create_alarms_task": {
-        "task": "api.adapters.primaries.products.tasks.create_expiry_alarms",
+        "task": "apps.webApp.tasks.create_expiry_alarms",
         "schedule": datetime.timedelta(hours=4),
     },
     "send_notifications_daily": {
-        "task": "app..adapters.primaries.products.tasks.send_notifications_for_today_alarms",
+        "task": "apps.webApp.tasks.send_notifications_for_today_alarms",
         "schedule": crontab(hour=0, minute=0),
     },
 }

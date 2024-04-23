@@ -1,10 +1,7 @@
-from django.contrib.gis.geos import Point
 from django.test import TestCase
 from django.urls import reverse
 from apps.backoffice.models.administrators import Administrator
-from django.core.files.uploadedfile import SimpleUploadedFile
 
-from rest_framework import status
 from rest_framework.test import APIClient
 
 

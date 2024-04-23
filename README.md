@@ -29,7 +29,7 @@ git clone https://github.com/skajacob/django_arq_hex_example.git
 
 3. Crear una base de datos cheaf-db en postgres 
 ```
-   createdb -U postgres -W -h 127.0.0.1 -p 5433 cheaf-db 
+   createdb -U postgres -W -h 127.0.0.1 -p 5432 cheaf-db 
  ```
 4. Situate en la carpeta del proyecto para crear tu archivo .env pon tus credenciasles de la bases de datos y tu correo con la ocntraseña para el servicio de notificaciones
    ```ssh
@@ -67,6 +67,15 @@ git clone https://github.com/skajacob/django_arq_hex_example.git
 
    ```ssh
     python manage.py runserver
+    ```
+7. En una terminal nueva nicia el redis-servidor(descargar Redis-x64-3.0.504.zip en 
+ https://github.com/microsoftarchive/redis/releases y agregarla a las variables de entorno)
+
+   ```redis-server 
+    ```
+8. En un terminal nueva inicia el cronjob
+
+   ```celery -A apps.webApp worker --loglevel=info
     ```
 
 ## Desplegar proyecto con docker

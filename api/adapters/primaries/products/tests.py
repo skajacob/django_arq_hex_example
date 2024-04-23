@@ -11,7 +11,7 @@ class ProductsAPITest(BaseAPITest):
     """API for testing Product's CRUD"""
 
     fixtures = [
-        "fixtures/data.json",
+        "fixtures/data2.json",
     ]
 
     def test_list_products(self):

@@ -79,6 +79,8 @@ docs/_build/
 # PyBuilder
 target/
 
+#Redis
+dump.rdb
 
 ### Django ###
 *.log
