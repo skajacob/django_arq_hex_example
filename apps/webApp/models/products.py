@@ -1,7 +1,7 @@
 from compartidos.models import TimestampedModel
 
 # Librerías de Terceros
-from django.contrib.gis.db import models
+from django.db import models
 
 
 class Product(TimestampedModel):

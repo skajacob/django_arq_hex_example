@@ -94,7 +94,7 @@ WSGI_APPLICATION = "configuracion.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": env.str("DB_ENGINE"),
-        "NAME": "cheaf-db",
+        "NAME": env.str("DB_NAME"),
         "USER": env.str("DB_USER"),
         "PASSWORD": env.str("DB_PASSWORD"),
         "HOST": env.str("DB_HOST"),
@@ -205,24 +205,24 @@ EMAIL_HOST_USER = (env.str("EMAIL_HOST_USER"),)
 EMAIL_HOST_PASSWORD = (env.str("EMAIL_HOST_PASSWORD"),)
 
 # OSGeo4W settings
-# Set the GDAL and GEOS library paths
-try:
-    GDAL_LIBRARY_PATH = os.path.join(os.environ["OSGEO4W_ROOT"], "bin", "gdal306.dll")
-    GEOS_LIBRARY_PATH = os.path.join(os.environ["OSGEO4W_ROOT"], "bin", "geos_c.dll")
-except KeyError:
-    print("Working without OSGEO4W")
-    GDAL_LIBRARY_PATH = os.environ.get("GDAL_LIBRARY_PATH")
-    GEOS_LIBRARY_PATH = os.environ.get("GEOS_LIBRARY_PATH")
+# # Set the GDAL and GEOS library paths
+# try:
+#     GDAL_LIBRARY_PATH = os.path.join(os.environ["OSGEO4W_ROOT"], "bin", "gdal306.dll")
+#     GEOS_LIBRARY_PATH = os.path.join(os.environ["OSGEO4W_ROOT"], "bin", "geos_c.dll")
+# except KeyError:
+#     print("Working without OSGEO4W")
+#     GDAL_LIBRARY_PATH = os.environ.get("GDAL_LIBRARY_PATH")
+#     GEOS_LIBRARY_PATH = os.environ.get("GEOS_LIBRARY_PATH")
 
-    # Add the paths to the system path
-    if GDAL_LIBRARY_PATH and os.path.exists(GDAL_LIBRARY_PATH):
-        os.environ["PATH"] = (
-            os.path.dirname(GDAL_LIBRARY_PATH) + ":" + os.environ["PATH"]
-        )
+#     # Add the paths to the system path
+#     if GDAL_LIBRARY_PATH and os.path.exists(GDAL_LIBRARY_PATH):
+#         os.environ["PATH"] = (
+#             os.path.dirname(GDAL_LIBRARY_PATH) + ":" + os.environ["PATH"]
+#         )
 
-    if GEOS_LIBRARY_PATH and os.path.exists(GEOS_LIBRARY_PATH):
-        os.environ["LD_LIBRARY_PATH"] = (
-            os.path.dirname(GEOS_LIBRARY_PATH)
-            + ":"
-            + os.environ.get("LD_LIBRARY_PATH", "")
-        )
+#     if GEOS_LIBRARY_PATH and os.path.exists(GEOS_LIBRARY_PATH):
+#         os.environ["LD_LIBRARY_PATH"] = (
+#             os.path.dirname(GEOS_LIBRARY_PATH)
+#             + ":"
+#             + os.environ.get("LD_LIBRARY_PATH", "")
+#         )

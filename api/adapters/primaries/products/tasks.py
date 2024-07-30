@@ -59,6 +59,7 @@ def create_product_alarms():
     except Exception as e:
         print(f"Error al generar las alarmas automaticas del cronjob: {e}")
 
+
 @shared_task
 def send_notifications_for_today_alarms():
     """cronjob for send email notifications"""
@@ -66,7 +67,9 @@ def send_notifications_for_today_alarms():
         products = products_engine.list_products()
         today = datetime.now().date()
         for product in products:
-            today_alarms = [alarm for alarm in product.alarms if alarm.alert_date == today]
+            today_alarms = [
+                alarm for alarm in product.alarms if alarm.alert_date == today
+            ]
             for alarm in today_alarms:
                 utils.send_notification(alarm, product)
     except Exception as e:
