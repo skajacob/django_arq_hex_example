@@ -12,3 +12,15 @@ test:
 	@echo "Starting tests..."
 	uv run python manage.py test
 
+
+test-unit:
+	@echo "Starting unit tests..."
+	uv run python manage.py test tests.unit
+
+test-integration:
+	@echo "Starting integration tests (docker compose stack required for redis)..."
+	docker compose exec backend python manage.py test tests.integration api
+
+test-e2e:
+	@echo "Starting end to end tests against the running stack..."
+	docker compose exec -e E2E_BASE_URL=http://localhost:8000 backend python -m unittest tests.e2e.test_stack -v

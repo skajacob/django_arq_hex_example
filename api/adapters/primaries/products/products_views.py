@@ -51,8 +51,14 @@ class ProductsViewSet(viewsets.GenericViewSet):
                 products = products_engine.get_product_with_alarms(
                     from_date=from_date, to_date=to_date
                 )
+                if not products:
+                    raise exceptions.ProductWithExpiryDatesDoesNotExist(
+                        from_date, to_date
+                    )
                 product_data = utils.product_generator_data(products)
-                get_product = products_serializer.ProductSerializer(data=product_data)
+                get_product = products_serializer.ProductSerializer(
+                    data=product_data, many=True
+                )
                 get_product.is_valid(raise_exception=True)
 
                 product = get_product.validated_data
