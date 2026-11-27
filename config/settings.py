@@ -180,11 +180,11 @@ CELERY_RESULT_BACKEND = env.str(
 CELERY_BEAT_SCHEDULE = {
     "create_alarms_task": {
         "task": "api.adapters.primaries.products.tasks.create_product_alarms",
-        "schedule": datetime.timedelta(hours=4),
+        "schedule": crontab(hour=0, minute=0),
     },
     "send_notifications_daily": {
         "task": "api.adapters.primaries.products.tasks.send_notifications_for_today_alarms",
-        "schedule": crontab(hour=0, minute=0),
+        "schedule": crontab(hour=0, minute=5),
     },
 }
 

@@ -117,7 +117,7 @@ class StackEndToEndTests(unittest.TestCase):
                 sorted(a["alert_type"] for a in alarms),
                 ["10_days_before", "5_days_before"],
             )
-            self.assertTrue(all(a["is_active"] for a in alarms))
+            self.assertFalse(any(a["is_active"] for a in alarms))
 
             # update with stock=0 keeps the value (regression)
             status, body = http(

@@ -43,7 +43,7 @@ class CreateProductAlarmsTaskTests(TestCase):
         self.assertEqual(
             alarms["5_days_before"].alert_date, product.expiry_date - timedelta(days=5)
         )
-        self.assertTrue(all(a.is_active for a in alarms.values()))
+        self.assertFalse(any(a.is_active for a in alarms.values()))
 
     def test_is_idempotent(self):
         product = _product()

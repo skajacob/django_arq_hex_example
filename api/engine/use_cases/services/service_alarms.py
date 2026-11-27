@@ -16,6 +16,11 @@ from api.engine.domain.entities import entities_products as entity_products
 EXPIRY_ALARM_RULES = {"10_days_before": 10, "5_days_before": 5}
 
 
+def is_alert_active(alert_date: date, today: typing.Optional[date] = None) -> bool:
+    """An alarm is active once its alert date has been reached"""
+    return alert_date <= (today or date.today())
+
+
 class AlarmService(manager.AlarmManager):
     """class to define the service for product uses cases"""
 
@@ -49,7 +54,7 @@ class AlarmService(manager.AlarmManager):
             product_id=product_id,
             alert_type=alert_type,
             alert_date=alert_date,
-            is_active=alert_date > date.today(),
+            is_active=is_alert_active(alert_date),
         )
 
     def update_alarm(
@@ -79,3 +84,20 @@ class AlarmService(manager.AlarmManager):
                         alert_type=alert_type,
                         alert_date=product.expiry_date - timedelta(days=days),
                     )
+
+    def refresh_alarms_status(self) -> int:
+        """Recalculate is_active for every alarm; returns how many changed"""
+        today = date.today()
+        changed = 0
+        for alarm in self.alarms_repository.list_alarms():
+            active = is_alert_active(alarm.alert_date, today)
+            if alarm.is_active != active:
+                self.alarms_repository.update_alarm(
+                    id=alarm.id,
+                    product_id=None,
+                    alert_type=None,
+                    alert_date=None,
+                    is_active=active,
+                )
+                changed += 1
+        return changed

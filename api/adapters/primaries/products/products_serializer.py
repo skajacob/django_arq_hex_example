@@ -86,6 +86,8 @@ class ProductQueryParamsSerializer(serializers.Serializer):
     product_id = serializers.IntegerField(required=False)
     from_date = serializers.CharField(required=False)
     to_date = serializers.CharField(required=False)
+    is_active = serializers.BooleanField(default=None, allow_null=True)
+    is_expired = serializers.BooleanField(default=None, allow_null=True)
 
 
 class AlarmQueryParamsSerializer(serializers.Serializer):

@@ -52,6 +52,57 @@ class ProductsApiTests(TestCase):
         self.assertEqual(listed.status_code, status.HTTP_200_OK)
         self.assertEqual(len(listed.data["data"]), 1)
 
+    def test_create_product_creates_10_and_5_days_alarms_immediately(self):
+        created = self._create()
+
+        alarms = created.data["data"]["alarms"]
+        self.assertEqual(
+            sorted(a["alert_type"] for a in alarms),
+            ["10_days_before", "5_days_before"],
+        )
+        detail = {a["alert_type"]: a["detail"] for a in alarms}
+        self.assertEqual(detail["10_days_before"]["days_until_activation"], 20)
+        self.assertEqual(detail["5_days_before"]["days_until_activation"], 25)
+        self.assertFalse(detail["5_days_before"]["is_expired"])
+
+    def test_list_includes_alarm_detail(self):
+        self._create()
+        alarm = self.client.get(self.url).data["data"][0]["alarms"][0]
+        self.assertEqual(
+            set(alarm["detail"]),
+            {"is_active", "is_expired", "days_until_activation", "days_expired"},
+        )
+
+    def test_filter_by_alert_status(self):
+        self._create()
+        past = str(date.today() + timedelta(days=6))
+        self._create(product_name="yogurt", expiry_date=past)
+        self._create(
+            product_name="cheese", expiry_date=str(date.today() + timedelta(days=3))
+        )
+
+        unfiltered = self.client.get(self.url)
+        self.assertEqual(len(unfiltered.data["data"]), 3)
+
+        pending = self.client.get(self.url, {"is_active": "false"})
+        names = sorted(p["product_name"] for p in pending.data["data"])
+        self.assertEqual(names, ["milk", "yogurt"])
+
+        active = self.client.get(self.url, {"is_active": "true"})
+        self.assertEqual(
+            sorted(p["product_name"] for p in active.data["data"]),
+            ["cheese", "yogurt"],
+        )
+        self.assertTrue(
+            all(a["detail"]["is_active"] for p in active.data["data"] for a in p["alarms"])
+        )
+
+        expired = self.client.get(self.url, {"is_expired": "true"})
+        self.assertEqual(
+            sorted(p["product_name"] for p in expired.data["data"]),
+            ["cheese", "yogurt"],
+        )
+
     def test_create_duplicate_product_returns_400(self):
         self._create()
         response = self._create()
@@ -127,7 +178,7 @@ class AlarmsApiTests(TestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue(response.data["data"]["is_active"])
+        self.assertFalse(response.data["data"]["is_active"])
 
         listed = self.client.get(reverse("crud-products"))
         alarms = listed.data["data"][0]["alarms"]

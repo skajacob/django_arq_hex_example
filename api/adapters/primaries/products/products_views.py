@@ -45,6 +45,8 @@ class ProductsViewSet(viewsets.GenericViewSet):
         product_query_params_serializer.is_valid(raise_exception=True)
         from_date = product_query_params_serializer.validated_data.get("from_date")
         to_date = product_query_params_serializer.validated_data.get("to_date")
+        is_active = product_query_params_serializer.validated_data.get("is_active")
+        is_expired = product_query_params_serializer.validated_data.get("is_expired")
 
         if from_date is not None and to_date is not None:
             try:
@@ -55,7 +57,9 @@ class ProductsViewSet(viewsets.GenericViewSet):
                     raise exceptions.ProductWithExpiryDatesDoesNotExist(
                         from_date, to_date
                     )
-                product_data = utils.product_generator_data(products)
+                product_data = utils.filter_products_by_alert_status(
+                    utils.product_generator_data(products), is_active, is_expired
+                )
                 get_product = products_serializer.ProductSerializer(
                     data=product_data, many=True
                 )
@@ -77,7 +81,9 @@ class ProductsViewSet(viewsets.GenericViewSet):
                 )
 
         products = products_engine.list_products()
-        product_data = utils.product_generator_data(products)
+        product_data = utils.filter_products_by_alert_status(
+            utils.product_generator_data(products), is_active, is_expired
+        )
 
         product_serializer = products_serializer.ProductSerializer(
             data=product_data, many=True
@@ -109,7 +115,10 @@ class ProductsViewSet(viewsets.GenericViewSet):
                 stock=product_serializer.validated_data.get("stock"),
                 expiry_date=product_serializer.validated_data.get("expiry_date"),
             )
-            product = product.__dict__
+            alarms_engine.create_expiry_alarms([product])
+            product = utils.product_generator_data(
+                [products_engine.get_product(product.id)]
+            )[0]
         except Exception as e:
             print(f"'{e}' exception raised in {__name__} at line 119")
             return Response(

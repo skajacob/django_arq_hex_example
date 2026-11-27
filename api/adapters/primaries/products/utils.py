@@ -22,7 +22,7 @@ def send_notification(alarm, product):
     )
     message += f"- ¿Expirada? {'Sí' if (datetime.now().date() - alarm.alert_date).days > 0 else 'No'}\n"
 
-    recipient_list = ["jmg_extreme@hotmail.com.com"]  # Lista de destinatarios
+    recipient_list = ["jmg_extreme@hotmail.com"]  # Lista de destinatarios
 
     # Enviar el correo electrónico
     send_mail(subject, message, from_email=None, recipient_list=recipient_list)
@@ -59,3 +59,21 @@ def product_generator_data(products):
             product_dict["alarms"].append(alarm_info)
         product_data.append(product_dict)
     return product_data
+
+
+def filter_products_by_alert_status(product_data, is_active=None, is_expired=None):
+    """keep only products with at least one alarm matching the requested status"""
+    if is_active is None and is_expired is None:
+        return product_data
+
+    def matches(alarm):
+        detail = alarm["detail"]
+        return (is_active is None or detail["is_active"] == is_active) and (
+            is_expired is None or detail["is_expired"] == is_expired
+        )
+
+    return [
+        {**product, "alarms": [a for a in product["alarms"] if matches(a)]}
+        for product in product_data
+        if any(matches(a) for a in product["alarms"])
+    ]

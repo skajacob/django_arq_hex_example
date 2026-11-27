@@ -19,6 +19,7 @@ def create_product_alarms():
         products = products_engine.list_products()
 
         alarms_engine.create_expiry_alarms(products)
+        alarms_engine.refresh_alarms_status()
     except Exception as e:
         print(f"Error al generar las alarmas automaticas del cronjob: {e}")
 

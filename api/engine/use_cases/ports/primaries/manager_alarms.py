@@ -56,3 +56,7 @@ class AlarmManager(abc.ABC):
         self, products: typing.List[entity_products.Product]
     ) -> None:
         ...
+
+    @abc.abstractmethod
+    def refresh_alarms_status(self) -> int:
+        ...

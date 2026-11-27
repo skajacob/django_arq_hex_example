@@ -12,19 +12,19 @@ class AlarmServiceTests(SimpleTestCase):
         self.repository = fakes.FakeAlarmRepository()
         self.service = factory.constructor_manager_alarms(self.repository)
 
-    def test_create_alarm_is_active_when_date_is_in_the_future(self):
+    def test_create_alarm_is_inactive_when_date_is_in_the_future(self):
         alarm = self.service.create_alarm(
             1, "custom", date.today() + timedelta(days=1)
         )[0]
-        self.assertTrue(alarm.is_active)
+        self.assertFalse(alarm.is_active)
 
-    def test_create_alarm_is_inactive_when_date_is_today_or_past(self):
+    def test_create_alarm_is_active_when_date_is_today_or_past(self):
         today = self.service.create_alarm(1, "custom", date.today())[0]
         past = self.service.create_alarm(
             1, "custom", date.today() - timedelta(days=3)
         )[0]
-        self.assertFalse(today.is_active)
-        self.assertFalse(past.is_active)
+        self.assertTrue(today.is_active)
+        self.assertTrue(past.is_active)
 
     def test_create_expiry_alarms_creates_10_and_5_days_before(self):
         expiry = date.today() + timedelta(days=30)
@@ -38,7 +38,7 @@ class AlarmServiceTests(SimpleTestCase):
         self.assertEqual(
             by_type["5_days_before"].alert_date, expiry - timedelta(days=5)
         )
-        self.assertTrue(all(a.is_active for a in by_type.values()))
+        self.assertFalse(any(a.is_active for a in by_type.values()))
 
     def test_create_expiry_alarms_is_idempotent(self):
         products = [fakes.make_product(1, date.today() + timedelta(days=30))]
@@ -55,12 +55,25 @@ class AlarmServiceTests(SimpleTestCase):
             ["10_days_before", "5_days_before"],
         )
 
-    def test_create_expiry_alarms_for_expired_product_are_inactive(self):
+    def test_create_expiry_alarms_for_expired_product_are_active(self):
         self.service.create_expiry_alarms(
             [fakes.make_product(1, date.today() - timedelta(days=1))]
         )
         self.assertTrue(self.repository.alarms)
-        self.assertFalse(any(a.is_active for a in self.repository.alarms))
+        self.assertTrue(all(a.is_active for a in self.repository.alarms))
+
+    def test_refresh_alarms_status_activates_reached_alarms_only(self):
+        due = self.service.create_alarm(1, "due", date.today() + timedelta(days=1))[0]
+        pending = self.service.create_alarm(1, "pending", date.today() + timedelta(days=9))[0]
+        due.alert_date = date.today()
+        pending.is_active = True
+
+        changed = self.service.refresh_alarms_status()
+
+        self.assertEqual(changed, 2)
+        self.assertTrue(due.is_active)
+        self.assertFalse(pending.is_active)
+        self.assertEqual(self.service.refresh_alarms_status(), 0)
 
     def test_update_alarm_keeps_false_values(self):
         alarm = self.service.create_alarm(
