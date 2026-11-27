@@ -170,19 +170,11 @@ SWAGGER_SETTINGS = {
     }
 }
 
-from celery import Celery
-
-celery_app = Celery("configuracion")
-# Configuración de Celery mediante la configuración de Django
-celery_app.config_from_object("django.conf:settings", namespace="CELERY")
-
-# Buscar tareas en todos los módulos de la aplicación y registrarlas automáticamente
-celery_app.autodiscover_tasks()
-
-
-# Configuración de Celery
-CELERY_BROKER_URL = "redis://localhost:6379/0"
-CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
+# Configuración de Celery (la app se define en configuracion/celery.py)
+CELERY_BROKER_URL = env.str("CELERY_BROKER_URL", default="redis://localhost:6379/0")
+CELERY_RESULT_BACKEND = env.str(
+    "CELERY_RESULT_BACKEND", default="redis://localhost:6379/0"
+)
 
 # Cronjobs Celery
 CELERY_BEAT_SCHEDULE = {

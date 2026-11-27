@@ -5,7 +5,7 @@ env = Env()
 env.read_env()
 
 # Conectarse al servidor Redis
-r = redis.Redis(host=env.str("DB_HOST"), port=env.str("DB_HOST"), db=env.str("REDIS_DB_NAME"))
+r = redis.Redis(host=env.str("REDIS_HOST"), port=env.int("REDIS_PORT"), db=env.int("REDIS_DB_NAME"))
 
 # Obtener todas las configuraciones
 all_configurations = r.config_get('*')

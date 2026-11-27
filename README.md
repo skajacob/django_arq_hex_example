@@ -10,7 +10,7 @@ git clone https://github.com/skajacob/django_arq_hex_example.git
 ## Bases de datos:
 - **PostgreSQL** : Se utiliza para almacenar la información interna de la aplicación
 
-`NOTA: De acuerdo a lo propuesto en la HU_SPRINT.md se genera un diagrama de entidad relación en un png`
+`NOTA: De acuerdo a lo propuesto en la docs/HU_SPRINT_Cheaf.md se genera un diagrama de entidad relación en un png`
 
 ## Desplegar proyecto
 
@@ -90,68 +90,56 @@ git clone https://github.com/skajacob/django_arq_hex_example.git
 8. En un terminal nueva inicia el cronjob
 
    ```ssh
-   celery -A apps.webApp worker --loglevel=info
+   celery -A configuracion worker -B --loglevel=info
     ```
 
 ## Desplegar proyecto con docker
 
-1. construye la imagen
+`docker compose` levanta 4 contenedores: **db** (PostgreSQL), **redis** (broker de Celery),
+**backend** (Django + gunicorn, ejecuta `migrate` al iniciar) y **worker** (Celery con beat embebido `-B`
+para los cronjobs de alarmas). La imagen se construye con `docker/Dockerfile` usando `uv`.
+
+1. Crea tu archivo `.env` a partir del ejemplo y ajusta credenciales:
 
    ```ssh
-   docker compose build
+   cp .env.example .env
    ```
-2. Crea el contenedor de la base
+
+2. Construye y levanta todos los servicios:
 
    ```ssh
-    docker compose up -d db
-    ```
-3. Crea el contenedor de la api
+   docker compose up -d --build
+   ```
+
+3. (Opcional) Carga los fixtures y revisa logs:
 
    ```ssh
-    docker compose up
-    ```
-4. Lista los contenedores para obtener los ids
+   docker compose exec backend python manage.py loaddata fixtures/data.json
+   docker compose logs -f worker
+   ```
 
-   ```ssh
-    docker ps
-    ```
-   
-5. Ingresa al contenedor de la base para instalar postgis y poder hacer migraciones
+La API queda en http://localhost:8000/api/swagger/
 
-   ```ssh
-    docker exec -it <id_container> bash
-    ```
+## Estructura de carpetas
 
-6. Instala postgis
+```
+api/            # Arquitectura hexagonal (engine + adapters)
+apps/           # Modelos Django (webApp, backoffice)
+compartidos/    # Utilidades compartidas
+configuracion/  # settings, urls, wsgi/asgi y celery.py
+docker/         # Dockerfile de la imagen (backend y worker)
+docs/           # HU, ERD y contratos
+fixtures/       # Datos de ejemplo
+scripts/        # Scripts auxiliares
+docker-compose.yaml
+```
 
-   ```ssh
-    apt-get update
-    apt-get install -y postgis
-    ```
-
-7. Crea la extension de postgres
-
-    ```ssh
-     psql -U postgres -c "CREATE EXTENSION postgis;"
-     ```
-
-8. Crea las migraciones en el contenedor de la api
-    
-    ```ssh
-    docker exec -it <id_container> bash
-    python manage.py makemigrations;
-    python manage.py migrate
-    redis-server 
-    celery -A apps.webApp worker --loglevel=info
-    ```
-
-   
 ### Info del proyecto
 
 Este proyecto fue desarrollado basado en una practica la cuál es generar contratos para el backend los cuales
 pérmitan de manera sencilla la integración de los servicios y la comunicación entre los mismos.
 
-Se generó un documento CONTRATO-HU-1-Products.md el cual contiene los contratos de los servicios que se implementaron en el proyecto.
+Se generó un documento docs/contratos/CONTRATO-HU-1-Products.md el cual contiene los contratos de los servicios que se implementaron en el proyecto.
 El proyecto cuenta con dos usuarios cargados en los fixtures. Los usuarios tienen dos perfiles, super_administrator y administrator.
 
 

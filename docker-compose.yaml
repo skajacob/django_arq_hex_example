@@ -1,11 +1,66 @@
-version: '3'
+x-app: &app
+  build:
+    context: .
+    dockerfile: docker/Dockerfile
+  env_file:
+    - .env
+  environment: &app-env
+    DB_ENGINE: django.db.backends.postgresql_psycopg2
+    DB_HOST: db
+    DB_PORT: 5432
+    CELERY_BROKER_URL: redis://redis:6379/0
+    CELERY_RESULT_BACKEND: redis://redis:6379/0
+  depends_on:
+    db:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
 
 services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
-  dyp:
-    build: .
-    command: gunicorn --bind :8000 --workers 4 --threads 4 --timeout 30 configuracion.wsgi:application
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    <<: *app
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+             gunicorn --bind 0.0.0.0:8000 --workers 4 --threads 4 --timeout 30 configuracion.wsgi:application"
     ports:
       - "8000:8000"
-    env_file:
-      - .env
+
+  # Celery worker with embedded beat (-B) to run the CELERY_BEAT_SCHEDULE cronjobs
+  worker:
+    <<: *app
+    command: celery -A configuracion worker -B --loglevel=info
+    depends_on:
+      backend:
+        condition: service_started
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  db_data:
+  redis_data:
