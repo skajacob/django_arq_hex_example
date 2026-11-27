@@ -1,4 +1,4 @@
-from compartidos.models import TimestampedModel
+from shared.models import TimestampedModel
 
 # Librerías de Terceros
 from django.db import models

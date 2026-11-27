@@ -1,4 +1,4 @@
-from compartidos.base_tst_class import BaseAPITest
+from shared.base_tst_class import BaseAPITest
 
 # Librerías de Terceros
 from rest_framework import status

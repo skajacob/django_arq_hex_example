@@ -45,14 +45,14 @@ services:
     <<: *app
     command: >
       sh -c "python manage.py migrate --noinput &&
-             gunicorn --bind 0.0.0.0:8000 --workers 4 --threads 4 --timeout 30 configuracion.wsgi:application"
+             gunicorn --bind 0.0.0.0:8000 --workers 4 --threads 4 --timeout 30 config.wsgi:application"
     ports:
       - "8000:8000"
 
   # Celery worker with embedded beat (-B) to run the CELERY_BEAT_SCHEDULE cronjobs
   worker:
     <<: *app
-    command: celery -A configuracion worker -B --loglevel=info
+    command: celery -A config worker -B --loglevel=info
     depends_on:
       backend:
         condition: service_started

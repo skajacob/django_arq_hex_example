@@ -1,5 +1,5 @@
 """Exceptions for dates validations"""
-from compartidos.exceptions import ExceptionBase
+from shared.exceptions import ExceptionBase
 
 
 class InvalidDate(ExceptionBase):

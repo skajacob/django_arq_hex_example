@@ -6,9 +6,9 @@ import os
 # Librerías de Terceros
 from celery import Celery
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "configuracion.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 
-app = Celery("configuracion")
+app = Celery("config")
 app.config_from_object("django.conf:settings", namespace="CELERY")
 # Tasks live in the hexagonal primary adapters, not in an installed Django app
 app.autodiscover_tasks(["api.adapters.primaries.products"])

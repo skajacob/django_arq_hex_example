@@ -6,7 +6,7 @@ import os
 # Librerías de Terceros
 from celery import Celery
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "configuracion.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 
 app = Celery("apps.webApp")
 

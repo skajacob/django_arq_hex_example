@@ -1,4 +1,4 @@
-from compartidos.models import TimestampedModel
+from shared.models import TimestampedModel
 
 # Librerías de Terceros
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser, UserManager

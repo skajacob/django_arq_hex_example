@@ -1,6 +1,6 @@
 """views for products service"""
 # Local utilities
-from compartidos.serializers import NotFoundSerializer
+from shared.serializers import NotFoundSerializer
 
 # Database imports
 from apps.webApp.models import products as products_models

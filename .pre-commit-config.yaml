@@ -4,7 +4,7 @@ repos:
         exclude: |
           (?x)^(
               ./migrations/.|
-              configuracion/|
+              config/|
               ./apps.py|
               manage.py|
               ./__init__.py|
@@ -18,7 +18,7 @@ repos:
         exclude: |
           (?x)^(
               ./migrations/.|
-              configuracion/|
+              config/|
               ./apps.py|
               manage.py|
           )$
@@ -31,7 +31,7 @@ repos:
         exclude: |
           (?x)^(
               ./migrations/.|
-              configuracion/|
+              config/|
               ./apps.py|
               manage.py|
           )$

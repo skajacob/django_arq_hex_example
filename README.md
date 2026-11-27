@@ -90,7 +90,7 @@ git clone https://github.com/skajacob/django_arq_hex_example.git
 8. En un terminal nueva inicia el cronjob
 
    ```ssh
-   celery -A configuracion worker -B --loglevel=info
+   celery -A config worker -B --loglevel=info
     ```
 
 ## Desplegar proyecto con docker
@@ -125,10 +125,10 @@ La API queda en http://localhost:8000/api/swagger/
 ```
 api/            # Arquitectura hexagonal (engine + adapters)
 apps/           # Modelos Django (webApp, backoffice)
-compartidos/    # Utilidades compartidas
-configuracion/  # settings, urls, wsgi/asgi y celery.py
+shared/    # Utilidades compartidas
+config/  # settings, urls, wsgi/asgi y celery.py
 docker/         # Dockerfile de la imagen (backend y worker)
-docs/           # HU, ERD y contratos
+docs/           # HU, ERD y contracts
 fixtures/       # Datos de ejemplo
 scripts/        # Scripts auxiliares
 docker-compose.yaml
@@ -139,7 +139,7 @@ docker-compose.yaml
 Este proyecto fue desarrollado basado en una practica la cuál es generar contratos para el backend los cuales
 pérmitan de manera sencilla la integración de los servicios y la comunicación entre los mismos.
 
-Se generó un documento docs/contratos/CONTRATO-HU-1-Products.md el cual contiene los contratos de los servicios que se implementaron en el proyecto.
+Se generó un documento docs/contracts/CONTRATO-HU-1-Products.md el cual contiene los contratos de los servicios que se implementaron en el proyecto.
 El proyecto cuenta con dos usuarios cargados en los fixtures. Los usuarios tienen dos perfiles, super_administrator y administrator.
 
 
