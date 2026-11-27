@@ -2,6 +2,7 @@
 # Standard Libraries
 # Librerias Estandar
 import typing
+from datetime import date
 
 # Project Libraries
 from api.engine.use_cases.ports.secondaries import repository_products as repository
@@ -40,7 +41,7 @@ class ProductService(manager.ProductManager):
         product_name: str,
         description: str,
         stock: int,
-        expiry_date: str,
+        expiry_date: date,
     ) -> entity.Product:
         product = self.products_repository.create_product(
             product_name=product_name,
@@ -56,7 +57,7 @@ class ProductService(manager.ProductManager):
         product_name: typing.Optional[str],
         description: typing.Optional[str],
         stock: typing.Optional[int],
-        expiry_date: typing.Optional[str],
+        expiry_date: typing.Optional[date],
     ) -> entity.Product:
         product = self.products_repository.update_product(
             id=id,

@@ -10,26 +10,15 @@ from rest_framework.permissions import DjangoModelPermissions
 from rest_framework.response import Response
 
 # Django REST Framework
-from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 
 # Third party libraries
 from drf_yasg.utils import swagger_auto_schema
 
 # Proyecto
-# Product & Alarm engine imports
-from ....adapters.secondaries.factory import constructor_products as products_repo
-from ....adapters.secondaries.factory import constructor_alarms as alarms_repo
-from ....engine.domain.exceptions import exceptions_products as exceptions
-from ....engine.use_cases import factory as engine
+from api.container import alarms_engine, products_engine
+from api.engine.domain.exceptions import exceptions_products as exceptions
 from . import products_serializer, utils
-
-# product engine implementation
-products_repository = products_repo.constructor_products(products_models.Product)
-products_engine = engine.constructor_manager_products(products_repository)
-# Alarm engine implementation
-alarms_repository = alarms_repo.constructor_alarms(products_models.Alarm)
-alarms_engine = engine.constructor_manager_alarms(alarms_repository)
 
 
 class ProductsViewSet(viewsets.GenericViewSet):
@@ -234,7 +223,7 @@ class AlarmsViewSet(viewsets.GenericViewSet):
         product_id = alarm_serializer.validated_data.get("product_id")
 
         try:
-            product = get_object_or_404(products_models.Product, id=product_id)
+            products_engine.get_product(id_product=product_id)
             alarms = alarms_engine.create_alarm(
                 product_id=product_id,
                 alert_type=alarm_serializer.validated_data.get("alert_type"),

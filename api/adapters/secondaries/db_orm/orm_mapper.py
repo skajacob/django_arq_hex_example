@@ -1,4 +1,4 @@
-"ORM mapper for products uses cases"
+"""ORM mapper: translates ORM models into domain entities"""
 # Entity
 from api.engine.domain.entities import entities_products, entities_alarms
 

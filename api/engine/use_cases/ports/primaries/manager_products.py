@@ -2,6 +2,7 @@
 # Standard Libraries
 # Librerias Estandar
 import typing
+from datetime import date
 import abc
 
 # Entity
@@ -39,7 +40,7 @@ class ProductManager(abc.ABC):
         product_name: str,
         description: str,
         stock: int,
-        expiry_date: str,
+        expiry_date: date,
     ) -> entity.Product:
         ...
 
@@ -50,7 +51,7 @@ class ProductManager(abc.ABC):
         product_name: str,
         description: str,
         stock: int,
-        expiry_date: str,
+        expiry_date: date,
     ) -> entity.Product:
         ...
 
