@@ -14,18 +14,14 @@ git clone https://github.com/skajacob/django_arq_hex_example.git
 
 ## Desplegar proyecto
 
-1. Crea tu ambiente virtual ejecuta el siguiente comando:
+1. Instala [uv](https://docs.astral.sh/uv/) y sincroniza el ambiente (crea `.venv` con Python 3.10 e instala dependencias desde `uv.lock`):
 
    ```ssh
-   py -m venv venv;
-   venv\Scripts\activate
+   uv sync
    ```
 
-2. Instala las dependencias del proyecto:
-
-   ```ssh
-    pip install -r requirements.txt
-    ```
+2. Ejecuta los comandos del proyecto con `uv run`, por ejemplo `uv run python manage.py migrate`.
+   (Alternativa con pip: `uv pip install -r requirements.txt`).
 
 3. Crear una base de datos cheaf-db en postgres 
 ```

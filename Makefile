@@ -1,14 +1,14 @@
 format:
 	@echo "Starting autoflake format"
-	autoflake --recursive api apps configuracion
+	uv run autoflake --recursive api apps configuracion
 	@echo "Starting isort format..."
-	isort api apps configuracion --skip __init__.py
+	uv run isort api apps configuracion --skip __init__.py
 	@echo "Starting black format..."
-	black api apps configuracion
+	uv run black api apps configuracion
 	@echo "Starting pylint "
-	pylint api apps configuracion
+	uv run pylint api apps configuracion
 
 test:
 	@echo "Starting tests..."
-	python manage.py test
+	uv run python manage.py test
 
