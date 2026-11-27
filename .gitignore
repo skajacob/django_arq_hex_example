@@ -94,4 +94,6 @@ venv/
 .env
 db.sqlite3
 remote.env
+!/env/
+env/*.env
 staticfiles/

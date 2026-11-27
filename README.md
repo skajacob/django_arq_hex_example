@@ -99,11 +99,17 @@ git clone https://github.com/skajacob/django_arq_hex_example.git
 **backend** (Django + gunicorn, ejecuta `migrate` al iniciar) y **worker** (Celery con beat embebido `-B`
 para los cronjobs de alarmas). La imagen se construye con `docker/Dockerfile` usando `uv`.
 
-1. Crea tu archivo `.env` a partir del ejemplo y ajusta credenciales:
+1. Crea un archivo de variables por servicio en `env/` a partir de los ejemplos y ajusta credenciales
+   (`POSTGRES_PASSWORD` de `db.env` debe coincidir con `DB_PASSWORD` de `backend.env` y `worker.env`;
+   solo el worker necesita las variables `EMAIL_*`; **redis** no requiere variables):
 
    ```ssh
-   cp .env.example .env
+   cp env/db.env.example env/db.env
+   cp env/backend.env.example env/backend.env
+   cp env/worker.env.example env/worker.env
    ```
+
+   El `.env.example` de la raiz es solo para ejecutar el proyecto fuera de Docker (hosts `127.0.0.1`).
 
 2. Construye y levanta todos los servicios:
 
